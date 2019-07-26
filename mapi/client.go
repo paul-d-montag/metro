@@ -50,12 +50,22 @@ func (c *Client) url(uri string, v ...interface{}) string {
 func (c *Client) do(req *http.Request) (*http.Response, error) {
 	c.init()
 
-	// if this were a server application instead of a terminal client
-	// I would add some exponential backoff code here that tried
-	// to run the request a set number of times before giving up.
-	// however, because this is a terminal client it makes more sense to
-	// fail quickly to let the user know something is wrong, instead of
-	// making them wait for multiple requests to fail.
+	// COMMENT: in hindsight, there should be a request backoff here. If a user
+	// waiting is truely an issue you could run the request loop in a goroutine
+	// and send the response and error back through a channel. While in the do
+	// function you could set up a select that listens on that channel as well
+	// as on a time.After() with the amount of time set to a acceptable time to
+	// wait for a failure. you could then have a buffered channel that would
+	// collect errors as they occured so on timeout you could fetch the first error
+	// to append to the timeout error. Otherwise the cause of the timeout would be
+	// hard to track down. You would also want the timeout of the http client to be less
+	// than the timeout within the select, otherwise you could create a situation
+	// where the client returns successfully after the select timeout, and no error would
+	// be present in the error buffer to return to the user. That would result in an
+	// error like
+	// timed out waiting for request: nil
+	// which could be hard to debug
+	// granted all of this may be over engineering for such a simple client
 	res, err := c.C.Do(req)
 	if err != nil {
 		return nil, err

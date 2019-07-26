@@ -41,6 +41,17 @@ list Routes:
 	},
 }
 
+// COMMENT: The overall usage of this command line client is clumsy while being
+// able to slowly discover all the things needed to render the final command, I
+// found myself constantly going back to the begining of the line and editing
+// the subcommand. In truth the command should flow, where as you offer it more data,
+// the context of what it shows you changes. The issue with doing this currently is the
+// filter argument at the end of each subcommand. This should be changed to a flag instead
+// so the flow can function. It could be made as a persistent flag since each subcommand uses it
+// I felt it was good to leave out a directions sub command as the directions are so closely
+// married to a route. The only reason it wasn't a default action is because it does demand a
+// new request to the api for each item
+
 // Execute adds all child commands to the root command and sets flags appropriately.
 // This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {

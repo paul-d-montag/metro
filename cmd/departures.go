@@ -121,6 +121,9 @@ func getStop(c *mapi.Client, routeId, directionId, substr string) (*mapi.Stop, e
 	return &stops[0], nil
 }
 
+// COMMENT: If the api fed me more data it would have been a good idea to implement the templating at a global
+// level along with the template flag. I often find myself making bash scripts around my software so any time you
+// can specify exactly the data you want instead of having to awk you way to it is a win.
 func init() {
 	rootCmd.AddCommand(departuresCmd)
 	departuresCmd.Flags().BoolVar(&next, "next", false, "Show only the next departure")
